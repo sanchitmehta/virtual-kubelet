@@ -1,4 +1,4 @@
-module github.com/sanchitmehta/virtual-kubelet
+module github.com/virtual-kubelet/virtual-kubelet
 
 go 1.17
 
