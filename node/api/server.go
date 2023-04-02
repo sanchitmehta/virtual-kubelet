@@ -15,6 +15,7 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
@@ -79,12 +80,14 @@ func PodHandler(p PodHandlerConfig, debug bool) http.Handler {
 	).Methods("POST", "GET")
 
 	if p.GetStatsSummary != nil {
+		fmt.Printf("\n\n\n\n######## Adding Pod Stats Summary Route\n\n\n")
 		f := HandlePodStatsSummary(p.GetStatsSummary)
 		r.HandleFunc("/stats/summary", f).Methods("GET")
 		r.HandleFunc("/stats/summary/", f).Methods("GET")
 	}
 
 	if p.GetMetricsResource != nil {
+		fmt.Printf("\n\n\n\n######## Adding Pod Metrics Route %v\n\n\n", MetricsResourceRouteSuffix)
 		f := HandlePodMetricsResource(p.GetMetricsResource)
 		r.HandleFunc(MetricsResourceRouteSuffix, f).Methods("GET")
 		r.HandleFunc(MetricsResourceRouteSuffix+"/", f).Methods("GET")
@@ -119,6 +122,7 @@ func PodStatsSummaryHandler(f PodStatsSummaryHandlerFunc) http.Handler {
 // If the passed in handler func is nil this will create handlers which only
 // serves http.StatusNotImplemented
 func PodMetricsResourceHandler(f PodMetricsResourceHandlerFunc) http.Handler {
+	fmt.Printf("\n\n\n\n##### PodMetricsResourceHandler\n\n\n")
 	if f == nil {
 		return http.HandlerFunc(NotImplemented)
 	}
@@ -157,6 +161,7 @@ type PodMetricsConfig struct {
 // Callers should take care to namespace the serve mux as they see fit, however
 // these routes get called by the Kubernetes API server.
 func AttachPodMetricsRoutes(p PodMetricsConfig, mux ServeMux) {
+	fmt.Printf("\n\n\n\n##### AttachPodMetricsRoutes\n\n\n")
 	mux.Handle("/", InstrumentHandler(HandlePodStatsSummary(p.GetStatsSummary)))
 	mux.Handle("/", InstrumentHandler(HandlePodMetricsResource(p.GetMetricsResource)))
 }
