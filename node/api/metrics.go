@@ -58,5 +58,6 @@ func HandlePodMetricsResource(h PodMetricsResourceHandlerFunc) http.HandlerFunc 
 			return errors.Wrap(err, "could not write to client")
 		}
 
+		return nil
 	})
 }
